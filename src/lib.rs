@@ -1,6 +1,11 @@
 #![no_std]
 #![recursion_limit = "128"]
 
+//! # Usefull macros
+//! A collection of useful macros for repetitive task in  Rust.
+
+
+
 /// # `from!`
 ///
 /// The `from!` macro is used to generate [From] trait implementations for specified types.
@@ -75,6 +80,9 @@ mod test_from {
         }
     }
 }
+
+
+
 
 /// # `into!` 
 ///
@@ -151,6 +159,7 @@ mod test_into {
         }
     }
 }
+
 
 /// # `deref!` 
 ///
