@@ -1,3 +1,6 @@
+#![no_std]
+#![recursion_limit = "128"]
+
 #[macro_export]
 macro_rules! from {
     // Base case: no arguments
