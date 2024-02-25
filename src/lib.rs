@@ -8,7 +8,7 @@ macro_rules! from {
         $from:ty => $to:ty: $func:ident,
         $($rest:tt)*
     ) => {
-        impl From<$from> for $to {
+        impl core::convert::From<$from> for $to {
             fn from(value: $from) -> $to {
                < $to >::$func(value)
             }
@@ -22,7 +22,7 @@ macro_rules! from {
         $from:ty => $to:ident,
         $($rest:tt)*
     ) => {
-        impl From<$from> for $to {
+        impl core::convert::From<$from> for $to {
             fn from(value: $from) -> $to {
                 let v = value as i32;
                 $to(v)
@@ -41,7 +41,6 @@ mod test {
     fn test_from_macro() {
         #[derive(Debug, PartialEq)]
         struct A(i32);
-
 
         #[derive(Debug, PartialEq)]
         struct B(i32);
