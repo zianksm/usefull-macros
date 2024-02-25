@@ -1,6 +1,28 @@
 #![no_std]
 #![recursion_limit = "128"]
 
+//! # Usefull macros
+//! A collection of useful macros for repetitive task in  Rust.
+
+
+
+/// # `from!`
+///
+/// The `from!` macro is used to generate [From] trait implementations for specified types.
+///
+/// ## Usage
+///
+/// ```no_run
+/// from! {
+///     i32 => A,
+///     u64 => B: from_u64,
+/// }
+/// ```
+///
+/// ## Details
+///
+/// - The macro accepts pairs of types separated by `=>`. 
+/// - Each pair can optionally be followed by a `:` and a function identifier. If provided, this function will be used for the conversion. If not, the constructor of the target type will be used.
 #[macro_export]
 macro_rules! from {
     // Base case: no arguments
@@ -34,7 +56,6 @@ macro_rules! from {
         from!($($rest)*);
     };
 }
-
 #[cfg(test)]
 mod test_from {
     use super::*;
@@ -60,8 +81,28 @@ mod test_from {
     }
 }
 
-#[macro_export]
-macro_rules! into {
+
+
+
+/// # `into!` 
+///
+/// The `into!` macro is used to generate `Into` trait implementations for specified types.
+///
+/// ## Usage
+///
+/// ```no_run
+/// into! {
+///     i32 => A,
+///     u64 => B: from_u64,
+///     B => C,
+/// }
+/// ```
+///
+/// ## Details
+///
+/// - The macro accepts pairs of types separated by `=>`. 
+/// - Each pair can optionally be followed by a `:` and a function identifier. If provided, this function will be used for the conversion. If not, the constructor of the target type will be used.
+#[macro_export]macro_rules! into {
     // Base case: no arguments
     () => {};
 
@@ -119,8 +160,25 @@ mod test_into {
     }
 }
 
-#[macro_export]
-macro_rules! deref {
+
+/// # `deref!` 
+///
+/// The `deref!` macro is used to generate `Deref` and `DerefMut` trait implementations for specified types.
+///
+/// ## Usage
+///
+/// ```
+/// deref! {
+///     A => i32,
+///     B => mut i32,
+/// }
+/// ```
+///
+/// ## Details
+///
+/// - The macro accepts pairs of types separated by `=>`. 
+/// - If the target type is preceded by `mut`, the macro generates both `Deref` and `DerefMut` implementations. If not, it only generates a `Deref` implementation.
+#[macro_export]macro_rules! deref {
     () => {
 
     };
