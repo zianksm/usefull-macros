@@ -1,3 +1,6 @@
+#![no_std]
+#![recursion_limit = "128"]
+
 #[macro_export]
 macro_rules! from {
     // Base case: no arguments
@@ -24,8 +27,7 @@ macro_rules! from {
     ) => {
         impl core::convert::From<$from> for $to {
             fn from(value: $from) -> $to {
-                let v = value as i32;
-                $to(v)
+                $to(value)
             }
         }
 
@@ -34,7 +36,7 @@ macro_rules! from {
 }
 
 #[cfg(test)]
-mod test {
+mod test_from {
     use super::*;
 
     #[test]
@@ -54,6 +56,66 @@ mod test {
         from! {
             i32 => A,
             u64 => B: from_u64,
+        }
+    }
+}
+
+#[macro_export]
+macro_rules! into {
+    // Base case: no arguments
+    () => {};
+
+
+    // Case without function: process one pair and recursively call the macro with the rest
+    (
+        $from:ty => $to:ident,
+        $($rest:tt)*
+    ) => {
+        impl core::convert::Into<$to> for $from {
+            fn into(self) -> $to {
+                $to(self)
+            }
+        }
+
+        into!($($rest)*);
+    };
+
+    // Case with function: process one pair and recursively call the macro with the rest
+    (
+        $from:ty => $to:ty: $func:ident,
+        $($rest:tt)*
+    ) => {
+        impl core::convert::Into<$to> for $from {
+            fn into(self) -> $to {
+               < $to >::$func(self)
+            }
+        }
+
+        into!($($rest)*);
+    };
+}
+#[cfg(test)]
+mod test_into {
+    #[test]
+    fn test_into_macro() {
+        #[derive(Debug, PartialEq)]
+        struct A(i32);
+
+        #[derive(Debug, PartialEq)]
+        struct B(i32);
+
+        struct C(B);
+
+        impl B {
+            fn from_u64(value: u64) -> B {
+                B(value as i32)
+            }
+        }
+
+        into! {
+            i32 => A,
+            u64 => B: from_u64,
+            B => C,
         }
     }
 }
