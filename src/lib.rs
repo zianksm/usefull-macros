@@ -65,7 +65,6 @@ macro_rules! into {
     // Base case: no arguments
     () => {};
 
-
     // Case without function: process one pair and recursively call the macro with the rest
     (
         $from:ty => $to:ident,
@@ -118,4 +117,41 @@ mod test_into {
             B => C,
         }
     }
+}
+
+#[macro_export]
+macro_rules! deref {
+    () => {
+
+    };
+
+    (
+        $from:ty => $to:ty,
+        $($rest:tt)*
+    ) => {
+        impl core::ops::Deref for $from {
+            type Target = $to;
+
+            fn deref(&self) -> &Self::Target {
+                &self.0
+            }
+        }
+
+        deref!($($rest)*);
+    };
+
+    {
+        $from:ty => mut $to:ty,
+        $($rest:tt)*
+    } => {
+        deref!($from => $to);
+
+        impl core::ops::DerefMut for $from {
+            fn deref_mut(&mut self) -> &mut Self::Target {
+                &mut self.0
+            }
+        }
+
+        deref!($($rest)*);
+    };
 }
