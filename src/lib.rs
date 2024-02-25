@@ -33,19 +33,6 @@ macro_rules! from {
     };
 }
 
-fn main() {
-    #[derive(Debug, PartialEq)]
-    struct A(i32);
-    #[derive(Debug, PartialEq)]
-    struct B(i32);
-
-    let value = 3;
-
-    from! {
-            i32 => A,
-        }
-}
-
 #[cfg(test)]
 mod test {
     use super::*;
